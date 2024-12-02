@@ -6,7 +6,7 @@
    "scripts": {
       "dev": "nodemon --exec babel-node ./index.js",
       "typeorm": "typeorm-ts-node-commonjs",
-      "build": "webpack --config webpack.config.js",
+      "build": "",
       "build-babel": "babel index.js src --out-dir dist --presets @babel/preset-env --extensions .js,.ts --copy-files"
    },
    "keywords": [],
