@@ -1,11 +1,11 @@
 /**
  * 定时任务
  */
-import { Model, DataTypes } from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 import User from './User';
 import db from '../config/db';
 
-class Schedule extends Model {}
+class Schedule extends Sequelize.Model {}
 
 Schedule.init({
     id: {

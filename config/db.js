@@ -2,66 +2,52 @@ import { Sequelize } from 'sequelize';
 import md5 from 'md5';
 import transaction from '../utils/transaction';
 
-class DB {
 
-    models = {};
+const newDB = new Sequelize({
+    dialect:'sqlite',
+    storage: './db.sqlite',
+    logging: false
+});
 
-    db;
+transaction.init(newDB);
 
-    constructor() {
-        this.init();
-        return this.db;
+
+
+
+console.log(newDB.models, 'dsdsd')
+
+
+const checkAdmin = async () => {
+
+    try {
+        await newDB.authenticate();
+        console.log('Connection has been established successfully.');        
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
     }
 
-    async init() {
-        if (!this.db) {
-            this.db = new Sequelize({
-                dialect:'sqlite',
-                storage: './db.sqlite',
-                logging: false,
-            });
+    const { User } = newDB.models;
 
-            transaction.init(this.db);
-
-            this.models = this.db.models;
-
-            try {
-                await this.db.authenticate();
-                console.log('Connection has been established successfully.');
-                await this.checkAdmin();
-                
-            } catch (error) {
-                console.error('Unable to connect to the database:', error);
-            }
-            return this.db;
+    const admin = await User.findOne({
+        where: {
+            role: 1,
         }
-    }
+    });
 
-    async checkAdmin() {
-
-        const { User } = this.models;
-
-        const admin = await User.findOne({
-            where: {
-                role: 1,
-            }
+    if (!admin) {
+        const password = md5('admin');
+        await User.create({
+            username: 'admin',
+            password,
+            email: '290119516@qq.com',
+            role: 1,
         });
-
-        if (!admin) {
-            const password = md5('admin');
-            await User.create({
-                username: 'admin',
-                password,
-                email: '290119516@qq.com',
-                role: 1,
-            });
-            console.log('创建管理员账号成功', `\n账号为：admin 密码为：${password}`);
-        } else {
-            console.log('管理员账号已存在');
-        }
+        console.log('创建管理员账号成功', `\n账号为：admin 密码为：${password}`);
+    } else {
+        console.log('管理员账号已存在');
     }
 }
 
-const db = new DB();
+checkAdmin();
 
-export default db;
+export default newDB;

@@ -4,9 +4,9 @@ import Folder from './Folder';
 import Schema from './Schema';
 import User from './User';
 import Schedule from './Schedule';
-import { DataTypes, Model } from'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 
-class Document extends Model {};
+class Document extends Sequelize.Model {};
 /**
  * @description 文档模型
  * @class Document

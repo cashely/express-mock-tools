@@ -1,7 +1,7 @@
 import db from '../config/db';
-import { DataTypes, Model } from'sequelize';
+import Sequelize, { DataTypes } from'sequelize';
 
-class Setting extends Model {};
+class Setting extends Sequelize.Model {};
 
 Setting.init({
     /**

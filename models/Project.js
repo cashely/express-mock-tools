@@ -1,10 +1,10 @@
 import db from '../config/db.js';
-import { Model, DataTypes } from'sequelize';
+import Sequelize, { DataTypes } from'sequelize';
 import User from './User.js';
 // import Document from './Document.js';
 import ProjectUser from './ProjectUser.js';
 
-class Project extends Model {};
+class Project extends Sequelize.Model {};
 /**
  * @description 项目模型
  * @class Project

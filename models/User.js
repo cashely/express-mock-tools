@@ -1,7 +1,7 @@
 import db from '../config/db.js';
-import { Model, DataTypes } from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 
-class User extends Model {};
+class User extends Sequelize.Model {};
 
 User.init({
     username: {

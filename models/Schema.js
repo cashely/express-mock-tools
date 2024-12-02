@@ -1,8 +1,8 @@
 import db from '../config/db.js';
 // import Document from './Document.js';
-import { DataTypes, Model } from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 
-class Schema extends Model {};
+class Schema extends Sequelize.Model {};
 /**
  * @description 文档模型
  * @class Document

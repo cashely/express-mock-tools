@@ -1,7 +1,7 @@
 import db from '../config/db.js';
-import { Model, DataTypes } from'sequelize';
+import Sequelize, { DataTypes } from'sequelize';
 
-class ProjectUser extends Model {};
+class ProjectUser extends Sequelize.Model {};
 ProjectUser.init({
     id: {
         type: DataTypes.INTEGER,

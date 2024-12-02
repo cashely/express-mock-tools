@@ -1,11 +1,11 @@
 /**
  * @name mock请求的记录
  */
-import { Model, DataTypes } from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
 import db from '../config/db';
 import DocumentModel from './Document';
 
-class RequestModel extends Model {}
+class RequestModel extends Sequelize.Model {}
 
 RequestModel.init({
     id: {

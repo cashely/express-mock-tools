@@ -1,7 +1,7 @@
 import db from "../config/db";
-import { DataTypes, Model } from "sequelize";
+import Sequelize, { DataTypes } from "sequelize";
 
-class Reference extends Model {};
+class Reference extends Sequelize.Model {};
 /**
  * @description 引用模型
  * @class Document

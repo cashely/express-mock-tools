@@ -1,12 +1,12 @@
 import db from '../config/db.js';
-import { Model, DataTypes } from'sequelize';
+import Sequelize, { DataTypes } from'sequelize';
 import User from './User.js';
 import Document from './Document.js';
 
 /**
  * @name 文档日志
  */
-class DocumentLog extends Model {};
+class DocumentLog extends Sequelize.Model {};
 
 DocumentLog.init({
     /**

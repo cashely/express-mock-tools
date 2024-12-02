@@ -1,3 +1,5 @@
-import start from './src/index';
+import start from './src/index.js';
 
-start();
+const app = start();
+
+export default app;

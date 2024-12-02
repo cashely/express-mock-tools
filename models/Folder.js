@@ -1,8 +1,8 @@
 import db from '../config/db.js';
 import Project from './Project.js';
-import { DataTypes, Model } from "sequelize";
+import Sequelize, { DataTypes } from "sequelize";
 
-class Folder extends Model {};
+class Folder extends Sequelize.Model {};
 
 Folder.init({
     /**
