@@ -1,12 +1,12 @@
 import { Sequelize } from 'sequelize';
 import md5 from 'md5';
+import path from 'node:path';
 import sqlite3 from 'sqlite3';
 import transaction from '../utils/transaction';
 
-
 const newDB = new Sequelize({
     dialect:'sqlite',
-    storage: './db.sqlite',
+    storage: path.join(__dirname, '../db.sqlite'),
     logging: false,
     dialectModule: sqlite3
 });

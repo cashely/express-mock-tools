@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _sequelize = require("sequelize");
 var _md = _interopRequireDefault(require("md5"));
+var _nodePath = _interopRequireDefault(require("node:path"));
 var _sqlite = _interopRequireDefault(require("sqlite3"));
 var _transaction = _interopRequireDefault(require("../utils/transaction"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
@@ -15,7 +16,7 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var newDB = new _sequelize.Sequelize({
   dialect: 'sqlite',
-  storage: './db.sqlite',
+  storage: _nodePath["default"].join(__dirname, '../db.sqlite'),
   logging: false,
   dialectModule: _sqlite["default"]
 });
