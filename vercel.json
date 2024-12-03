@@ -2,6 +2,16 @@
     "version": 2,
     "devCommand": "pnpm run dev",
     "buildCommand": "pnpm run build-swc",
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/"
+        },
+        {
+            "source": "/:path*",
+            "destination": "/:path*"
+        }
+    ],
     "builds": [
         {
             "src": "./dist/index.js",
