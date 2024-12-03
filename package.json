@@ -2,11 +2,13 @@
    "name": "nodejs-starter",
    "version": "1.0.0",
    "description": "",
-   "main": "index.js",
+   "main": "src/index.js",
    "scripts": {
-      "dev": "nodemon --exec babel-node ./index.js",
+      "dev": "babel-node ./src/index.js",
       "typeorm": "typeorm-ts-node-commonjs",
-      "build": "",
+      "build-swc": "babel src -d dist --copy-files",
+      "start": "@vercel/node ./src/index.js",
+      "webpack": "webpack --config webpack.config.js",
       "build-babel": "babel index.js src --out-dir dist --presets @babel/preset-env --extensions .js,.ts --copy-files"
    },
    "keywords": [],
@@ -31,7 +33,9 @@
       "nanoid": "^3.3.6",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
-      "sequelize": "^6.37.5"
+      "sequelize": "^6.37.5",
+      "sqlite3": "5.1.7",
+      "pg-hstore": "^2.3.4"
    },
    "devDependencies": {
       "@babel/cli": "^7.25.9",
@@ -39,14 +43,17 @@
       "@babel/node": "^7.25.0",
       "@babel/plugin-proposal-export-default-from": "^7.24.7",
       "@babel/preset-env": "^7.25.4",
+      "@swc/cli": "^0.5.2",
+      "@swc/core": "^1.9.3",
       "@types/node": "^16.11.10",
+      "@vercel/node": "^3.2.27",
       "babel-loader": "^9.2.1",
       "nodemon": "^3.1.7",
-      "pg-hstore": "^2.3.4",
       "sequelize-auto-migrations-v2": "^1.2.1",
       "sequelize-cli": "^6.6.2",
-      "sqlite3": "^5.1.7",
       "ts-node": "10.9.1",
-      "typescript": "4.5.2"
+      "typescript": "4.5.2",
+      "webpack": "^5.96.1",
+      "webpack-cli": "^5.1.4"
    }
 }

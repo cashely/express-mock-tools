@@ -1,6 +1,7 @@
 {
     "version": 2,
     "devCommand": "pnpm run dev",
+    "buildCommand": "pnpm run build-swc",
     "rewrites": [
         {
             "source": "/(.*)",
@@ -9,7 +10,7 @@
     ],
     "builds": [
         {
-            "src": "index.js",
+            "src": "./dist/index.js",
             "use": "@vercel/node",
             "config": {
                 "zeroConfig": true
