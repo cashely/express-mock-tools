@@ -6,7 +6,7 @@
    "scripts": {
       "dev": "babel-node ./src/index.js",
       "typeorm": "typeorm-ts-node-commonjs",
-      "build-swc": "babel src -d dist --copy-files",
+      "build-swc": "babel src -d api --copy-files",
       "start": "node ./dist/index.js",
       "webpack": "webpack --config webpack.config.js",
       "build-babel": "babel index.js src --out-dir dist --presets @babel/preset-env --extensions .js,.ts --copy-files"

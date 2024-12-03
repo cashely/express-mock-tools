@@ -3,18 +3,9 @@
     "devCommand": "pnpm run dev",
     "buildCommand": "pnpm run build-swc",
     "routes": [
-    {
-        "src": "/(.*)",
-        "dest": "/"
-    }
-    ],
-    "builds": [
         {
-            "src": "./dist/index.js",
-            "use": "@vercel/node",
-            "config": {
-                "zeroConfig": true
-            }
+            "src": "/(.*)",
+            "dest": "/api"
         }
     ]
 }
