@@ -13,7 +13,7 @@
             "src": "./dist/api/index.js",
             "use": "@vercel/node",
             "config": {
-                "zeroConfig": true
+                "includeFiles": ["./dist/**"]
             }
         }
     ]
