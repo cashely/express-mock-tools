@@ -24,7 +24,7 @@ app.use(_bodyParser["default"].urlencoded({
   extended: true
 }));
 app.use(_response["default"]);
-(0, _expressWs["default"])(app);
+// expressWs(app);
 var port = 3000;
 (0, _routes["default"])(app);
 app.get('/', function (req, res) {

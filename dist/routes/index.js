@@ -31,13 +31,4 @@ var _default = exports["default"] = function _default(app) {
   app.use('/logs', _documentLog["default"]);
   app.use('/upload', _upload["default"]);
   app.use('/schedule', _schedule["default"]);
-  app.ws('/socket', function (ws, req) {
-    console.log('链接了', ws);
-    ws.on('message', function (msg) {
-      console.log('收到了', msg);
-    });
-    setInterval(function () {
-      ws.send('hello');
-    }, 2000);
-  });
 };

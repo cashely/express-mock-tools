@@ -21,13 +21,4 @@ export default (app) => {
   app.use('/logs', documentLog);
   app.use('/upload', upload);
   app.use('/schedule', schedule);
-  app.ws('/socket', (ws, req) => {
-    console.log('链接了', ws);
-    ws.on('message', (msg) => {
-      console.log('收到了', msg);
-    })
-    setInterval(() => {
-      ws.send('hello');
-    }, 2000)
-  })
 }

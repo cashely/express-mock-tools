@@ -21,7 +21,6 @@ var newDB = new _sequelize.Sequelize({
   dialectModule: _sqlite["default"]
 });
 _transaction["default"].init(newDB);
-console.log(newDB.models, 'dsdsd');
 var checkAdmin = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
     var User, admin, password;

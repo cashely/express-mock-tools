@@ -13,12 +13,6 @@ const newDB = new Sequelize({
 
 transaction.init(newDB);
 
-
-
-
-console.log(newDB.models, 'dsdsd')
-
-
 const checkAdmin = async () => {
 
     try {
