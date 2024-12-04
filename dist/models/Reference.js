@@ -105,6 +105,7 @@ Reference.init({
   sequelize: _db["default"],
   modelName: 'Reference',
   tableName: 'references',
+  freezeTableName: true,
   paranoid: true
 });
 var _default = exports["default"] = Reference;

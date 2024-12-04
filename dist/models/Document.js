@@ -126,7 +126,7 @@ Document.init({
   method: {
     type: _sequelize.DataTypes.INTEGER,
     allowNull: true,
-    defaultValue: 'all' // 0 - all 1 - get 2 - post 3 - put 4 - delete
+    defaultValue: 0 // 0 - all 1 - get 2 - post 3 - put 4 - delete
   },
   /**
    * @name 返回状态码
@@ -163,44 +163,7 @@ Document.init({
   sequelize: _db["default"],
   modelName: 'Document',
   tableName: 'documents',
-  paranoid: true
-});
-_Project["default"].hasMany(Document, {
-  foreignKey: 'projectId',
-  sourceKey: 'id',
-  as: 'documents',
-  scope: {
-    statu: 1
-  }
-});
-Document.belongsTo(_Project["default"], {
-  foreignKey: 'projectId',
-  targetKey: 'id',
-  as: 'project'
-});
-_Folder["default"].hasMany(Document, {
-  foreignKey: 'folderId',
-  sourceKey: 'id',
-  as: 'documents'
-});
-Document.belongsTo(_Folder["default"], {
-  foreignKey: 'folderId',
-  targetKey: 'id',
-  as: 'folder'
-});
-Document.belongsTo(_Schema["default"], {
-  foreignKey: 'schemaId',
-  sourceKey: 'id',
-  as: 'schema'
-});
-Document.belongsTo(_User["default"], {
-  foreignKey: 'creatorId',
-  targetKey: 'id',
-  as: 'creator'
-});
-Document.belongsTo(_Schedule["default"], {
-  foreignKey: 'scheduleId',
-  targetKey: 'id',
-  as: 'schedule'
+  paranoid: true,
+  freezeTableName: true
 });
 var _default = exports["default"] = Document;

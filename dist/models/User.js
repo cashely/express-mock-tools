@@ -45,7 +45,7 @@ User.init({
     allowNull: false
   },
   statu: {
-    type: _sequelize.DataTypes.NUMBER,
+    type: _sequelize.DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 1
   },
@@ -114,19 +114,8 @@ User.init({
 }, {
   sequelize: _db["default"],
   modelName: 'User',
-  tableName: 'users'
+  tableName: 'users',
+  freezeTableName: true
   // paranoid: true,
-});
-User.belongsTo(User, {
-  allowNull: true,
-  foreignKey: 'creatorId',
-  targetKey: 'id',
-  as: 'creator'
-});
-User.belongsTo(User, {
-  allowNull: true,
-  foreignKey: 'inviteUserId',
-  targetKey: 'id',
-  as: 'inviterUser'
 });
 var _default = exports["default"] = User;

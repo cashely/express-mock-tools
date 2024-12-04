@@ -77,16 +77,7 @@ DocumentLog.init({
   sequelize: _db["default"],
   modelName: 'DocumentLog',
   tableName: 'document_logs',
+  freezeTableName: true,
   paranoid: true
-});
-DocumentLog.belongsTo(_User["default"], {
-  foreignKey: 'operatorId',
-  targetKey: 'id',
-  as: 'operator'
-});
-DocumentLog.belongsTo(_Document["default"], {
-  foreignKey: 'documentId',
-  targetKey: 'id',
-  as: 'document'
 });
 var _default = exports["default"] = DocumentLog;

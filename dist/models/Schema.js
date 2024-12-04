@@ -90,6 +90,7 @@ Schema.init({
   sequelize: _db["default"],
   modelName: 'Schema',
   tableName: 'schemas',
+  freezeTableName: true,
   paranoid: true
 });
 var _default = exports["default"] = Schema;

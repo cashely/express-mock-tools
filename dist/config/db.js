@@ -20,7 +20,6 @@ var sqliteDB = new _sequelize.Sequelize({
   logging: false,
   dialectModule: _sqlite["default"]
 });
-console.log(process.env.POSTGRESQL_URL, process.env.NODE_ENV);
 var pgDB = new _sequelize.Sequelize(process.env.POSTGRESQL_URL, {
   dialect: 'postgres',
   logging: false
@@ -29,7 +28,6 @@ var newDB = process.env.NODE_ENV === 'production' ? pgDB : sqliteDB;
 _transaction["default"].init(newDB);
 var checkAdmin = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var User, admin, password;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -45,34 +43,6 @@ var checkAdmin = /*#__PURE__*/function () {
           _context.t0 = _context["catch"](0);
           console.error('Unable to connect to the database:', _context.t0);
         case 9:
-          User = newDB.models.User;
-          _context.next = 12;
-          return User.findOne({
-            where: {
-              role: 1
-            }
-          });
-        case 12:
-          admin = _context.sent;
-          if (admin) {
-            _context.next = 20;
-            break;
-          }
-          password = (0, _md["default"])('admin');
-          _context.next = 17;
-          return User.create({
-            username: 'admin',
-            password: password,
-            email: '290119516@qq.com',
-            role: 1
-          });
-        case 17:
-          console.log('创建管理员账号成功', "\n\u8D26\u53F7\u4E3A\uFF1Aadmin \u5BC6\u7801\u4E3A\uFF1A".concat(password));
-          _context.next = 21;
-          break;
-        case 20:
-          console.log('管理员账号已存在');
-        case 21:
         case "end":
           return _context.stop();
       }

@@ -77,7 +77,7 @@ Project.init({
    * @description 项目状态
    */
   statu: {
-    type: _sequelize.DataTypes.NUMBER,
+    type: _sequelize.DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 1 // 0 - 删除 1 - 正常
   },
@@ -122,23 +122,8 @@ Project.init({
 }, {
   sequelize: _db["default"],
   modelName: 'Project',
-  tableName: 'projects'
+  tableName: 'projects',
+  freezeTableName: true
   // paranoid: true
-});
-Project.belongsToMany(_User["default"], {
-  through: _ProjectUser["default"],
-  foreignKey: 'projectId',
-  otherKey: 'userId',
-  as: 'users'
-});
-_User["default"].belongsToMany(Project, {
-  through: _ProjectUser["default"],
-  foreignKey: 'userId',
-  otherKey: 'projectId',
-  as: 'projects'
-});
-Project.belongsTo(_User["default"], {
-  foreignKey: 'creatorId',
-  as: 'creator'
 });
 var _default = exports["default"] = Project;
