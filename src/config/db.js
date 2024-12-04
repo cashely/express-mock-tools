@@ -1,9 +1,7 @@
 import { Sequelize } from 'sequelize';
-import md5 from 'md5';
 import path from 'node:path';
 import sqlite3 from 'sqlite3';
 import * as pg from 'pg';
-import { PostgresDialect } from '@sequelize/postgres';
 import transaction from '../utils/transaction';
 
 const sqliteDB = new Sequelize({

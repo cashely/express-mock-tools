@@ -37,8 +37,7 @@
       "pg-hstore": "^2.3.4",
       "reflect-metadata": "^0.1.13",
       "sequelize": "^6.37.5",
-      "sqlite3": "5.1.7",
-      "pg-native": "file:./node_modules/noop2"
+      "sqlite3": "5.1.7"
    },
    "devDependencies": {
       "@babel/cli": "^7.25.9",
