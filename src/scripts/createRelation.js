@@ -1,21 +1,20 @@
 /**
  * @name 创建表的关联关系
  */
-import models from '../models/index';
 
-const {
-    Project,
-    Document,
-    Folder,
-    Schema,
-    User,
-    Schedule,
-    DocumentLog,
-    ProjectUser,
-    Request
-} = models;
-
-export default function createRelation() {
+export default function createRelation(models) {
+    const {
+        Project,
+        Document,
+        Folder,
+        Schema,
+        User,
+        Schedule,
+        DocumentLog,
+        ProjectUser,
+        Request
+    } = models;
+    
     Project.hasMany(Document, {
         foreignKey: 'projectId',
         sourceKey: 'id',

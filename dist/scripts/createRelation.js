@@ -4,22 +4,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = createRelation;
-var _index = _interopRequireDefault(require("../models/index"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
 /**
  * @name 创建表的关联关系
  */
 
-var Project = _index["default"].Project,
-  Document = _index["default"].Document,
-  Folder = _index["default"].Folder,
-  Schema = _index["default"].Schema,
-  User = _index["default"].User,
-  Schedule = _index["default"].Schedule,
-  DocumentLog = _index["default"].DocumentLog,
-  ProjectUser = _index["default"].ProjectUser,
-  Request = _index["default"].Request;
-function createRelation() {
+function createRelation(models) {
+  var Project = models.Project,
+    Document = models.Document,
+    Folder = models.Folder,
+    Schema = models.Schema,
+    User = models.User,
+    Schedule = models.Schedule,
+    DocumentLog = models.DocumentLog,
+    ProjectUser = models.ProjectUser,
+    Request = models.Request;
   Project.hasMany(Document, {
     foreignKey: 'projectId',
     sourceKey: 'id',

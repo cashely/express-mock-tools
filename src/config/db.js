@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import path from 'node:path';
 import sqlite3 from 'sqlite3';
 import * as pg from 'pg';
+import createRelation from '../scripts/createRelation';
 import transaction from '../utils/transaction';
 
 const sqliteDB = new Sequelize({
@@ -23,6 +24,7 @@ const checkAdmin = async () => {
 
     try {
         await newDB.authenticate();
+        createRelation(newDB.models);
         console.log('Connection has been established successfully.');        
     } catch (error) {
         console.error('Unable to connect to the database:', error);

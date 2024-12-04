@@ -6,11 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _sequelize = require("sequelize");
-var _md = _interopRequireDefault(require("md5"));
 var _nodePath = _interopRequireDefault(require("node:path"));
 var _sqlite = _interopRequireDefault(require("sqlite3"));
 var pg = _interopRequireWildcard(require("pg"));
-var _postgres = require("@sequelize/postgres");
+var _createRelation = _interopRequireDefault(require("../scripts/createRelation"));
 var _transaction = _interopRequireDefault(require("../utils/transaction"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { "default": e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n["default"] = e, t && t.set(e, n), n; }
@@ -40,18 +39,19 @@ var checkAdmin = /*#__PURE__*/function () {
           _context.next = 3;
           return newDB.authenticate();
         case 3:
+          (0, _createRelation["default"])(newDB.models);
           console.log('Connection has been established successfully.');
-          _context.next = 9;
+          _context.next = 10;
           break;
-        case 6:
-          _context.prev = 6;
+        case 7:
+          _context.prev = 7;
           _context.t0 = _context["catch"](0);
           console.error('Unable to connect to the database:', _context.t0);
-        case 9:
+        case 10:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 6]]);
+    }, _callee, null, [[0, 7]]);
   }));
   return function checkAdmin() {
     return _ref.apply(this, arguments);

@@ -12,7 +12,7 @@ Promise.all(Object.values(_index["default"]).map(function (model) {
   });
 })).then(function () {
   console.log('数据表全部创建完成, 开始创建关联关系');
-  (0, _createRelation["default"])();
+  // createRelation(models);
 }).then(function () {
   console.log('创建默认用户');
   return (0, _createAdmin["default"])();
