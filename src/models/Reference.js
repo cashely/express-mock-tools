@@ -76,6 +76,7 @@ Reference.init({
     sequelize: db,
     modelName:'Reference',
     tableName:'references',
+    freezeTableName: true,
     paranoid: true
 })
 

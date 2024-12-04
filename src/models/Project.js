@@ -49,7 +49,7 @@ Project.init({
      * @description 项目状态
      */
     statu: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1, // 0 - 删除 1 - 正常
     },
@@ -95,26 +95,8 @@ Project.init({
     sequelize: db,
     modelName: 'Project',
     tableName: 'projects',
+    freezeTableName: true,
     // paranoid: true
-});
-
-Project.belongsToMany(User, {
-    through: ProjectUser,
-    foreignKey: 'projectId',
-    otherKey: 'userId',
-    as: 'users'
-});
-
-User.belongsToMany(Project, {
-    through: ProjectUser,
-    foreignKey: 'userId',
-    otherKey: 'projectId',
-    as: 'projects'
-});
-
-Project.belongsTo(User, {
-    foreignKey: 'creatorId',
-    as: 'creator'
 });
 
 

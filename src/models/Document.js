@@ -97,7 +97,7 @@ Document.init({
     method: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        defaultValue: 'all', // 0 - all 1 - get 2 - post 3 - put 4 - delete
+        defaultValue: 0, // 0 - all 1 - get 2 - post 3 - put 4 - delete
     },
     /**
      * @name 返回状态码
@@ -136,56 +136,7 @@ Document.init({
     modelName: 'Document',
     tableName: 'documents',
     paranoid: true,
+    freezeTableName: true
 });
-
-Project.hasMany(Document, {
-    foreignKey: 'projectId',
-    sourceKey: 'id',
-    as: 'documents',
-    scope: {
-        statu: 1
-    }
-});
-
-Document.belongsTo(Project, {
-    foreignKey: 'projectId',
-    targetKey: 'id',
-    as: 'project'
-});
-
-Folder.hasMany(Document, {
-    foreignKey: 'folderId',
-    sourceKey: 'id',
-    as: 'documents'
-});
-
-Document.belongsTo(Folder, {
-    foreignKey: 'folderId',
-    targetKey: 'id',
-    as: 'folder'
-});
-
-Document.belongsTo(Schema, {
-    foreignKey:'schemaId',
-    sourceKey: 'id',
-    as:'schema'
-});
-
-Document.belongsTo(User, {
-    foreignKey: 'creatorId',
-    targetKey: 'id',
-    as: 'creator'
-});
-
-Document.belongsTo(Schedule, {
-    foreignKey:'scheduleId',
-    targetKey: 'id',
-    as:'schedule'
-});
-
-
-
-
-
 
 export default Document

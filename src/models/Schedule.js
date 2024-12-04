@@ -27,7 +27,7 @@ Schedule.init({
         comment: '调用地址',
     },
     method: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         defaultValue: 2, // 1 - get 2 - post 3 - put 4 - delete 5 - patch
         allowNull: false,
         comment: '调用方法',
@@ -39,7 +39,7 @@ Schedule.init({
         comment: '间隔时间',
     },
     running: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
         comment: '是否正在运行'
     },
@@ -52,13 +52,8 @@ Schedule.init({
     sequelize: db,
     modelName: 'Schedule',
     tableName:'schedules',
+    freezeTableName: true,
     paranoid: true,
-});
-
-Schedule.belongsTo(User, {
-    foreignKey: 'creatorId',
-    targetKey: 'id',
-    as: 'creator'
 });
 
 export default Schedule;

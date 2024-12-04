@@ -1,10 +1,12 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
-var _main = _interopRequireDefault(require("./main.js"));
+var _dotenv = _interopRequireDefault(require("dotenv"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-var app = (0, _main["default"])();
-var _default = exports["default"] = app;
+// import start from './main.js';
+
+_dotenv["default"].config();
+console.log(process.env.NODE_ENV);
+
+// const app = start();
+
+// export default app;

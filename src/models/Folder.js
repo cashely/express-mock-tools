@@ -58,27 +58,8 @@ Folder.init({
     sequelize: db,
     modelName: 'Folder',
     tableName: 'folders',
+    freezeTableName: true,
     paranoid: true
-});
-
-Project.hasMany(Folder, {
-    foreignKey: 'projectId',
-    as: 'folders'
-});
-
-Folder.belongsTo(Project, {
-    foreignKey: 'projectId',
-    as: 'project'
-});
-
-// Folder.hasOne(Folder, {
-//     foreignKey: 'folderId',
-//     as: 'parent'
-// });
-
-Folder.belongsTo(Folder, {
-    foreignKey: 'folderId',
-    as: 'parent'
 });
 
 export default Folder;

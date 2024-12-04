@@ -17,7 +17,7 @@ User.init({
         allowNull: false,
     },
     statu: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,
     },

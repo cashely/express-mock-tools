@@ -20,7 +20,8 @@ ProjectUser.init({
 }, {
     sequelize: db,
     modelName: 'ProjectUser',
-    tableName: 'project_user'
+    tableName: 'project_user',
+    freezeTableName: true,
 })
 
 export default ProjectUser;

@@ -62,6 +62,7 @@ Schema.init({
     sequelize: db,
     modelName: 'Schema',
     tableName:'schemas',
+    freezeTableName: true,
     paranoid: true,
 })
 

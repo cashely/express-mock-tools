@@ -16,7 +16,8 @@ Setting.init({
 }, {
     sequelize: db,
     modelName:'Setting',
-    tableName:'settings'
+    tableName:'settings',
+    freezeTableName: true,
 });
 
 export default Setting;

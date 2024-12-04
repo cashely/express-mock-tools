@@ -4,12 +4,18 @@ import path from 'node:path';
 import sqlite3 from 'sqlite3';
 import transaction from '../utils/transaction';
 
-const newDB = new Sequelize({
+const sqliteDB = new Sequelize({
     dialect:'sqlite',
     storage: path.join(__dirname, '../db.sqlite'),
     logging: false,
     dialectModule: sqlite3
 });
+const pgDB = new Sequelize(process.env.POSTGRESQL_URL, {
+    dialect: 'postgres',
+    logging: false,
+});
+
+const newDB = process.env.NODE_ENV === 'production'? pgDB : sqliteDB;
 
 transaction.init(newDB);
 
@@ -22,26 +28,26 @@ const checkAdmin = async () => {
         console.error('Unable to connect to the database:', error);
     }
 
-    const { User } = newDB.models;
+    // const { User } = newDB.models;
 
-    const admin = await User.findOne({
-        where: {
-            role: 1,
-        }
-    });
+    // const admin = await User.findOne({
+    //     where: {
+    //         role: 1,
+    //     }
+    // });
 
-    if (!admin) {
-        const password = md5('admin');
-        await User.create({
-            username: 'admin',
-            password,
-            email: '290119516@qq.com',
-            role: 1,
-        });
-        console.log('创建管理员账号成功', `\n账号为：admin 密码为：${password}`);
-    } else {
-        console.log('管理员账号已存在');
-    }
+    // if (!admin) {
+    //     const password = md5('admin');
+    //     await User.create({
+    //         username: 'admin',
+    //         password,
+    //         email: '290119516@qq.com',
+    //         role: 1,
+    //     });
+    //     console.log('创建管理员账号成功', `\n账号为：admin 密码为：${password}`);
+    // } else {
+    //     console.log('管理员账号已存在');
+    // }
 }
 
 checkAdmin();

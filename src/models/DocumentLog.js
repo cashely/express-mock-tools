@@ -48,19 +48,8 @@ DocumentLog.init({
     sequelize: db,
     modelName: 'DocumentLog',
     tableName: 'document_logs',
+    freezeTableName: true,
     paranoid: true,
-});
-
-DocumentLog.belongsTo(User, {
-    foreignKey: 'operatorId',
-    targetKey: 'id',
-    as: 'operator'
-});
-
-DocumentLog.belongsTo(Document, {
-    foreignKey: 'documentId',
-    targetKey: 'id',
-    as: 'document'
 });
 
 export default DocumentLog;

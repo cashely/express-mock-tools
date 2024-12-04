@@ -1,10 +1,9 @@
 
 import Schema from './Schema.js';
-
-import Project from './Project.js';
 import Reference from './Reference.js';
 import User from './User.js';
 import Folder from './Folder.js';
+import Project from './Project.js';
 import Document from './Document.js';
 import Schedule from './Schedule.js';
 import ProjectUser from './ProjectUser.js';

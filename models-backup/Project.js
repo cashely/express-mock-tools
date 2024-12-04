@@ -49,7 +49,7 @@ Project.init({
      * @description 项目状态
      */
     statu: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1, // 0 - 删除 1 - 正常
     },

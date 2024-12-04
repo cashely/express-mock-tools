@@ -33,9 +33,8 @@ RequestModel.init({
         sequelize: db,
         modelName: 'Request',
         tableName:'requests',
+        freezeTableName: true,
         paranoid: true,
 });
-
-RequestModel.belongsTo(DocumentModel, { foreignKey: 'documentId', targetKey: 'id', as: 'document' });
 
 export default RequestModel;
