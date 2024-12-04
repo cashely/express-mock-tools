@@ -9,7 +9,7 @@ Promise.all(
         .map(model => model.sync({ force: true }))
 ).then(() => {
   console.log('数据表全部创建完成, 开始创建关联关系');
-  // createRelation(models);
+  createRelation(models);
 })
 .then(() => {
   console.log('创建默认用户');

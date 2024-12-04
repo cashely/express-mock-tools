@@ -9,6 +9,7 @@ var _sequelize = require("sequelize");
 var _nodePath = _interopRequireDefault(require("node:path"));
 var _sqlite = _interopRequireDefault(require("sqlite3"));
 var pg = _interopRequireWildcard(require("pg"));
+var _models = _interopRequireDefault(require("../models"));
 var _createRelation = _interopRequireDefault(require("../scripts/createRelation"));
 var _transaction = _interopRequireDefault(require("../utils/transaction"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
@@ -39,7 +40,7 @@ var checkAdmin = /*#__PURE__*/function () {
           _context.next = 3;
           return newDB.authenticate();
         case 3:
-          (0, _createRelation["default"])(newDB.models);
+          (0, _createRelation["default"])(_models["default"]);
           console.log('Connection has been established successfully.');
           _context.next = 10;
           break;
