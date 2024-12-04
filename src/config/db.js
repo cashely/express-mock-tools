@@ -25,7 +25,7 @@ const checkAdmin = async () => {
 
     try {
         await newDB.authenticate();
-        createRelation(models);
+        createRelation(newDB.models);
         console.log('Connection has been established successfully.');        
     } catch (error) {
         console.error('Unable to connect to the database:', error);
