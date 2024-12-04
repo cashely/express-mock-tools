@@ -40,19 +40,24 @@ var checkAdmin = /*#__PURE__*/function () {
           _context.next = 3;
           return newDB.authenticate();
         case 3:
-          (0, _createRelation["default"])(_models["default"]);
+          (0, _createRelation["default"])(newDB.models);
+          _context.next = 6;
+          return newDB.sync({
+            alter: true
+          });
+        case 6:
           console.log('Connection has been established successfully.');
-          _context.next = 10;
+          _context.next = 12;
           break;
-        case 7:
-          _context.prev = 7;
+        case 9:
+          _context.prev = 9;
           _context.t0 = _context["catch"](0);
           console.error('Unable to connect to the database:', _context.t0);
-        case 10:
+        case 12:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 7]]);
+    }, _callee, null, [[0, 9]]);
   }));
   return function checkAdmin() {
     return _ref.apply(this, arguments);
