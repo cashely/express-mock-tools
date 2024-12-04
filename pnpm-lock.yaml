@@ -112,6 +112,9 @@ devDependencies:
   nodemon:
     specifier: ^3.1.7
     version: 3.1.7
+  noop2:
+    specifier: ^2.0.0
+    version: 2.0.0
   sequelize-auto-migrations-v2:
     specifier: ^1.2.1
     version: 1.2.1
@@ -5263,6 +5266,10 @@ packages:
       supports-color: 5.5.0
       touch: 3.1.1
       undefsafe: 2.0.5
+    dev: true
+
+  /noop2@2.0.0:
+    resolution: {integrity: sha512-2bu7Pfpf6uNqashWV8P7yYeutQ3XkLY9MBSYI5sOAFZxuWcW/uJfLbKj5m6SvMDT9U1Y0C+7UFG+7VSiIdXjtA==}
     dev: true
 
   /nopt@5.0.0:
