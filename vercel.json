@@ -1,7 +1,7 @@
 {
     "version": 2,
     "devCommand": "pnpm run dev",
-    "buildCommand": "pnpm run build-swc",
+    "buildCommand": "",
     "routes": [
     {
         "src": "/(.*)",
