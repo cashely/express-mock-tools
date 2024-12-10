@@ -1,39 +1,36 @@
-import { Op } from 'sequelize';
 import md5 from 'md5';
 import { nanoid } from 'nanoid';
-import transaction from '../utils/transaction';
+import { transaction } from '../config/prismaDB';
 import { signToken } from '../utils';
 import Router from "../utils/route";
-import userService from "../services/user";
-import documentService from "../services/document";
 
 const loginRouter = new Router();
 // console.log(userService.findAll({}))
 
 loginRouter.post('/', async (req, res) => {
-    const { username, password } = req.body;
-    const user = await userService.findOne({
-        where: {
-            [Op.or]: [
-                { username },
-                { email: username }],
-            password: md5(password),
+    transaction(async (prisma) => {
+        const { username, password } = req.body;
+        const userResult = await prisma.user.findFirst({
+            where: {
+                username,
+                password: md5(password),
+                
+            }
+        });
+        if (!userResult) {
+            return res.response.error(400, '用户名或密码错误');
         }
-    });
-
-    if (!user) {
-        return res.response.error(400, '用户名或密码错误');
-    }
-    return res.response.success(signToken(user));
+        return res.response.success(signToken(userResult));
+    }, res);
 })
 
 const signUpRouter = new Router();
 signUpRouter.post('/', async (req, res) => {
-    transaction.start(async (t) => {
+    transaction(async (prisma) => {
         const { username, password, email, inviteCode } = req.body;
-        const user = await userService.findOne({
+        const user = await prisma.user.findFirst({
             where: {
-                [Op.or]: [
+                OR: [
                     { username },
                     { email }],
             }
@@ -46,7 +43,7 @@ signUpRouter.post('/', async (req, res) => {
 
         if (inviteCode) {
             // 根据邀请的code查找存在的用户
-            inviteUser = await userService.findOne({
+            inviteUser = await prisma.user.findUnique({
                 where: {
                     inviteCode
                 }
@@ -57,18 +54,26 @@ signUpRouter.post('/', async (req, res) => {
             }
 
             // 邀请码的用户可创建的文档增加50个
-            await userService.updateOneById(inviteUser.id, {
+            await prisma.user.update({
+                inviteUserId: inviteUser.id
+            }, {
                 stock: inviteUser.stock + 50
-            }, { transaction: t });
+            });
         }
-
-        await userService.create({
+        const userInstance = {
             username,
-            password: md5(password),
-            email,
-            inviteUserId: !!inviteCode ? inviteUser.id : null,
-            inviteCode: nanoid(5).toUpperCase()
-        }, { transaction: t });
+                password: md5(password),
+                email,
+                inviteUser: {
+                },
+                inviteCode: nanoid(5).toUpperCase()
+        }
+        if (!!inviteCode) {
+            userInstance.inviteUser.connect = { id: inviteUser.id };
+        }
+        await prisma.user.create({
+            data: userInstance
+        });
         res.response.success(true);
     }, res);
 })
@@ -83,38 +88,44 @@ const router = new Router({
 });
 
 router.get('/', async (req, res) => {
-    const users = await userService.findAll();
-    res.response.success(users);
+    transaction(async (prisma) => {
+        const users = await prisma.user.findMany();
+        res.response.success(users);
+    })
 })
     .get('/current', async (req, res) => {
         try {
+            
+        } catch (error) {
+            res.response.error(400, error.message);
+        }
+
+        transaction(async (prisma) => {
             const { user } = req;
-            const userResult = userService.findOne({
+            const userResult = prisma.user.findUnique({
                 where: {
                     id: user.id
                 }
             });
-            const documentResult = documentService.models.Document.count({
+            const documentResult = prisma.document.count({
                 where: {
                     creatorId: user.id
                 }
             });
             const [users, documentCount] = await Promise.all([userResult, documentResult]);
             res.response.success({
-                ...users.toJSON(),
+                ...users,
                 documentCount
             });
-        } catch (error) {
-            res.response.error(400, error.message);
-        }
+        }, res, '查询用户信息失败')
     })
     .post('/', async (req, res) => {
         const { user } = req;
         const { username, password, email, role = 0, avatar = 'https://www.loliapi.com/acg/pc/', inviteCode } = req.body;
-        transaction.start(async (t) => {
+        transaction(async (prisma) => {
             // 邀请码校验
             if (inviteCode) {
-                const userResult = await userService.findOne({
+                const userResult = await prisma.user.findUnique({
                     where: {
                         inviteCode
                     }
@@ -124,20 +135,24 @@ router.get('/', async (req, res) => {
                     return res.response.error(400, '邀请码错误');
                 }
                 // 邀请码的用户可创建的文档增加50个
-                await userService.updateOneById(userResult.id, {
+                await prisma.user.update({
+                    id: userResult.id
+                }, {
                     stock: userResult.stock + 50
-                }, { transaction: t });
+                });
 
             }
 
-            const userResult = await userService.create({
-                username,
-                password: md5(password),
-                email,
-                role,
-                avatar,
-                creatorId: user.id
-            }, { transaction: t });
+            const userResult = await prisma.user.create({
+                data: {
+                    username,
+                    password: md5(password),
+                    email,
+                    role,
+                    avatar,
+                    creatorId: user.id
+                }
+            });
             res.response.success(userResult);
         }, res)
     })

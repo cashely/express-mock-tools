@@ -5,9 +5,6 @@ import expressWs from 'express-ws';
 import cors from 'cors';
 import routes from './routes';
 import response from './middleware/response';
-
-// import db from '../config/db';
-
 const app = express();
 
 app.use(morgan('tiny'));

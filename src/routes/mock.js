@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import df from 'd-forest';
 import { isMatch } from 'micromatch';
-import transaction from '../utils/transaction';
 import schemaParser from '../utils/schemaParser';
-import projectModel from '../models/Project';
-import documentService from '../services/document';
-import requestService from '../services/request';
+
+import { transaction } from '../config/prismaDB';
 
 const router = Router();
 
 router.use('/:projectAlias/*', async (req, res) => {
-  transaction.start(async (t) => {
+  transaction(async (prisma) => {
 
       // project的项目名称
       const { projectAlias } = req.params;
@@ -22,20 +20,20 @@ router.use('/:projectAlias/*', async (req, res) => {
   
       // return res.json(req.headers)
   
-      const result = await documentService.findAll({
+      const result = await prisma.document.findMany({
         where: {
           path,
+          project: {
+            alias: projectAlias
+          }
         },
-        include: [
-          {
-            model: projectModel,
-            as: 'project',
-            where: {
-              alias: projectAlias
-            }
-          },
-        ],
-      }, { transaction: t });
+        include: {
+          project: true,
+          schema: true,
+          folder: true,
+          schedule: true,
+        },
+      });
 
       const findMatchDocument = result.filter(document => {
         // 把/pet/{abc}/{abc}的结构，转换成/pet/*/*
@@ -55,13 +53,15 @@ router.use('/:projectAlias/*', async (req, res) => {
         return res.status(404).send('document not found');
       }
 
-      const documentJson = findMatchDocument[0].toJSON();
+      const documentJson = findMatchDocument[0];
   
-      await requestService.create({
-        from,
-        headers: JSON.stringify(headers),
-        documentId: documentJson.id
-      }, { transaction: t })
+      await prisma.request.create({
+        data: {
+          from,
+          headers: JSON.stringify(headers),
+          documentId: documentJson.id
+        }
+      })
       
       
       let content = JSON.parse(documentJson.schema.content);
@@ -74,11 +74,11 @@ router.use('/:projectAlias/*', async (req, res) => {
       }
 
       if (result.useTemplate === 1) {
-        const projectResult = await projectModel.findOne({
+        const projectResult = await prisma.project.findUnique({
           where: {
             id: documentJson.projectId
           }
-        }, { transaction: t });
+        });
 
         const _templateContent = content;
 

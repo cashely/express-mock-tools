@@ -1,5 +1,4 @@
-import User from "../models/User";
-import DocumentLogService from "../services/documentLog";
+import { transaction } from "../config/prismaDB"; 
 import Router from "../utils/route";
 
 const router = new Router({
@@ -7,45 +6,50 @@ const router = new Router({
 });
 
 router.get('/', async (req, res) => {
-    const logs = await DocumentLogService.DocumentLog.findAll({
-        order: [
-            ['time', 'DESC']
-        ],
-        include: [
-            {
-                model: User,
-                as: 'operator'
-            }
-        ]
-    });
-    res.response.success(logs);
+    transaction(async (prisma) => {
+        const logs = await prisma.documentLog.findMany({
+            include: {
+                operator: true
+            },
+            orderBy: [
+                {
+                    id: 'desc'
+                }
+            ]
+        });
+        res.response.success(logs);
+    })
 })
 .get('/:id', async (req, res) => {
     const { id } = req.params;
-    const log = await DocumentLogService.DocumentLog.findOne({
-        where: {
-            id: id
-        }
-    });
-    res.response.success(log);
+    transaction(async (prisma) => {
+        const log = await prisma.documentLog.findUnique({
+            where: {
+                id
+            },
+            include: {
+                operator: true
+            }
+        });
+        res.response.success(log);
+    })
 })
 .get('/document/:documentId', async (req, res) => {
     const { documentId } = req.params;
-    const logs = await DocumentLogService.DocumentLog.findAll({
-        where: {
-            documentId
-        },
-        order: [
-            ['createdAt', 'DESC']
-        ],
-        include: [
-            {
-                model: DocumentLogService.models.User,
-                as: 'operator'
+    transaction(async (prisma) => {
+        const result = await prisma.documentLog.findMany({
+            where: {
+                documentId: Number(documentId)
+            },
+            orderBy: {
+                id: 'desc'
+            },
+            include: {
+                operator: true
             }
-        ],
-    });
-    res.response.success(logs);
+        });
+        res.response.success(result);
+    }, res, '查询文档日志失败');
 })
 
 export default router;

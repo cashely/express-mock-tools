@@ -1,10 +1,6 @@
 import fd from 'fast-diff';
 import Router from '../utils/route';
-import documentService from '../services/document';
-import documentLog from '../services/documentLog';
-import schemaService from '../services/schema';
-import requestService from '../services/request';
-import transaction from '../utils/transaction';
+import { transaction } from '../config/prismaDB';
 
 const router = new Router({
   auth: true
@@ -13,90 +9,124 @@ const router = new Router({
 router
   .get('/', async (req, res) => {
     const { projectId } = req.query;
-    try {
-      const result = await documentService.findAll({
+    transaction(async (prisma) => {
+      const result = await prisma.document.findMany({
         where: {
-          projectId
+          projectId: Number(projectId)
         }
       });
       res.response.success(result);
-    } catch (error) {
-      console.error(error);
-      res.response.error(500, '查询文档失败');
-    }
+    }, res);
   })
 
   .get('/count', async (req, res) => {
     const { projectId } = req.query;
-    try {
-      const result = await documentService.models.Document.count({
+    transaction(async (prisma) => {
+      const result = await prisma.document.count({
         where: {
-          projectId
+          projectId: Number(projectId)
         }
       });
       res.response.success(result);
-    } catch (error) {
-      console.error(error);
-      res.response.error(500, '统计文档数量失败');
-    }
+    }, res, '统计文档数量失败');
   })
 
   .get('/:id', async (req, res) => {
     const { id } = req.params;
-    try {
-      const result = await documentService.findOne({
+    transaction(async (prisma) => {
+      const result = await prisma.document.findUnique({
         where: {
-          id
+          id: Number(id)
+        },
+        include: {
+          schema: true,
+          project: true,
+          folder: true,
+          schedule: true,
         }
       });
       res.response.success(result);
-    } catch (error) {
-      console.error(error);
-      res.response.error(500, '查询文档失败');
-    }
+    }, res, '查询文档失败');
   })
 
   .post('/', async (req, res) => {
-    transaction.start(async (t) => {
-      const { projectId, name, content, path, folderId, description, type, useTemplate, protocal, scheduleId } = req.body;
-      const { user } = req;
-      const schemaResult = await schemaService.create({
-        name,
-        content
-      }, { transaction: t });
-      const result = await documentService.create({
-        projectId,
-        folderId,
-        name,
-        schemaId: schemaResult.id,
-        creatorId: user.id,
-        path,
-        description,
-        type,
-        useTemplate,
-        scheduleId,
-        protocal
-      }, { transaction: t });
+    const { projectId, name, content, path, folderId, description, type, useTemplate, protocol, scheduleId } = req.body;
+    const { user } = req;
+    transaction(async (prisma) => {
 
-      await documentLog.create({
-        documentId: result.id,
-        operatorId: user.id,
+      const documentLogInstance = {
+        operator: {
+          connect: {
+            id: user.id
+          }
+        },
         content,
         type: 1,
-        time: Date.now()
-      }, { transaction: t });
-      res.response.success(result);
-    }, res);
+        document: {
+          create: {
+            name,
+            path,
+            project: {
+              connect: {
+                id: Number(projectId)
+              }
+            },
+            creator: {
+              connect: {
+                id: user.id
+              }
+            },
+            latestCreator: {
+              connect: {
+                id: user.id
+              }
+            },
+            schema: {
+              create: {
+                name,
+                content
+              }
+            },
+            description,
+            type,
+            useTemplate,
+            protocol,
+          }
+        }
+      }
+      if (!!scheduleId) {
+        documentLogInstance.schedule = {
+          connect: {
+            id: scheduleId
+          }
+        }
+      }
+      
+      if (!!folderId) {
+        documentLogInstance.document.create.folder = {
+          connect: {
+            id: folderId
+          }
+        }
+      }
+      const documentLogResult = await prisma.documentLog.create({
+        data: documentLogInstance
+      });
+      res.response.success(documentLogResult);
+    }, res, '创建文档失败');
   })
 
   .put('/:id', async (req, res) => {
     const { id } = req.params;
     const { user } = req;
-    const { content, name, description, type, schemaId, path, useTemplate, protocal, scheduleId } = req.body;
-    transaction.start(async (t) => {
-      const documentResult = await documentService.findOne({
+    const { content, name, description, type, schemaId, path, useTemplate, protocol, scheduleId } = req.body;
+    transaction(async (prisma) => {
+      const documentResult = await prisma.document.findUnique({
         where: {
-          id
+          id: Number(id)
+        },
+        include: {
+          schema: true,
         }
       });
 
@@ -108,100 +138,121 @@ router
       const isDiffContent = fd(content, documentResult.schema.content);
 
       if (isDiffContent.length > 1) {
-        await schemaService.updateOneById(schemaId, {
-          content
-        }, { transaction: t });
+        await prisma.schema.update({
+          where: {
+            id: schemaId
+          },
+          data: {
+            content
+          }
+        });
 
-        await documentLog.create({
-          documentId: id,
-          operatorId: user.id,
-          content,
-          type: 0,
-          time: Date.now()
-        }, {
-          transaction: t
+        await prisma.documentLog.create({
+          data: {
+            document: {
+              connect: {
+                id: Number(id)
+              }
+            },
+            operator: {
+              connect: {
+                id: user.id
+              }
+            },
+            content,
+            type: 0
+          }
         });
       }
-
-      const result = await documentService.updateOneById(id, {
+      
+      const documentInstance = {
         name,
         description,
         type,
         path,
         useTemplate,
-        protocal,
-        scheduleId: scheduleId
-      }, {
-        transaction: t
+        protocol
+      }
+      if (!!scheduleId) {
+        documentInstance.schedule = {
+          connect: {
+            id: scheduleId
+          }
+        }
+      }
+      const result = await prisma.document.update({
+        where: {
+          id: Number(id)
+        },
+        data: documentInstance
       });
       res.response.success(result);
-    }, res);
+    }, res, "更新文档失败");
   })
 
   .delete('/:id', async (req, res) => {
     const { id } = req.params;
     const { user } = req;
-    try {
-
+    transaction(async (prisma) => {
       // 如果不是文档的作者不允许执行删除操作
-      const documentResult = await documentService.findOne({
+      const documentResult = await prisma.document.findUnique({
         where: {
           id
-        }
+        },
       });
       if (documentResult.creatorId !== user.id) {
         return res.response.error(403, '该文档不是您创建的，无法删除');
       }
-      const result = await documentService.deleteOneById(id);
+      const result = await prisma.document.update({
+        where: {
+          id
+        },
+        data: {
+          statu: 0
+        }
+      });
 
-      await documentLog.create({
+      await prisma.documentLog.create({
         documentId: id,
         operatorId: user.id,
-        type: 2,
-        time: Date.now()
+        type: 2
       });
       res.response.success(result);
-    } catch (error) {
-      console.error(error);
-      res.response.error(500, '删除文档失败');
-    }
+    })
   })
 
   .get('/export/:id', async (req, res) => {
     const { id } = req.params;
-    try {
-      const result = await documentService.findOne({
+    transaction(async (prisma) => {
+      const result = await prisma.document.findUnique({
         where: {
           id
+        },
+        include: {
+          schema: true,
         }
       });
       res.response.success({
         content: result.toJSON().schema.content
       })
-    } catch (error) {
-      console.error(error);
-      res.response.error(500, '查询文档失败');
-    }
+    })
   })
 
   // @name 获取文档mock的访问记录
   .get('/request/:id', async (req, res) => {
     const { id } = req.params;
-    try {
-      const result = await requestService.findAll({
+    transaction(async (prisma) => {
+      const result = await prisma.request.findMany({
         where: {
-          documentId: id
+          documentId: Number(id)
         }
       });
       res.response.success(result);
-    } catch (error) {
-      console.log(error)
-      res.response.error(500, error);
-    }
+    }, res);
   })
   // 从swagger批量导入
   .post('/import/swagger', async (req, res) => {
-    transaction.start(async (t) => {
+    transaction(async (prisma) => {
       const { user } = req;
       const { projectId, documents } = req.body;
       const filterNullContent = documents.filter((item) => item.content);
@@ -212,7 +263,9 @@ router
           content: item.content,
         }
       });
-      const schemaResults = await schemaService.bulkCreate(schemaEntitys, { transaction: t });
+      const schemaResults = await prisma.schema.createMany({
+        data: schemaEntitys
+      });
 
       // 把空的内容跟非空的内容聚合成新的文档实体
       const documentEntitys = [
@@ -254,7 +307,9 @@ router
         })
       ];
       // 批量创建文档
-      const documentResults = await documentService.bulkCreate(documentEntitys, { transaction: t });
+      const documentResults = await prisma.document.createMany({
+        data: documentEntitys
+      });
 
       res.response.success(documentResults);
     }, res);

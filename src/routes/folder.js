@@ -1,39 +1,37 @@
-import folderService from '../services/folder';
-import models from '../models/index';
+import { transaction } from '../config/prismaDB';
 import Router from '../utils/route';
 
 const router = new Router();
 
 router.post('/', async (req, res) => {
-    try {
+    transaction(async (prisma) => {
         const { projectId, name } = req.body;
-        const result = await folderService.create({
-            projectId,
-            name
-        });
+        const result = await prisma.folder.create({
+            data: {
+                project: {
+                    connect: {
+                        id: Number(projectId)
+                    }
+                },
+                name
+            }
+        })
         res.response.success(result);
-    } catch (error) {
-        res.response.error(500, error);
-    }
+    }, res);
 })
 .get('/', async (req, res) => {
-    try {
-        const { projectId } = req.query;
-        const result = await folderService.findAll({
+    const { projectId } = req.query;
+    transaction(async (prisma) => {
+        const result = await prisma.folder.findMany({
             where: {
-                projectId
+                projectId: Number(projectId)
             },
-            include: [
-                {
-                    model: models.Project,
-                    as: 'project',
-                }
-            ]
+            include: {
+                project: true
+            }
         });
         res.response.success(result);
-    } catch (error) {
-        res.response.error(500, error);
-    }
+    }, res);
 })
 
 export default router;

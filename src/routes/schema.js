@@ -1,24 +1,23 @@
-import models from '../models';
-import schemaService from '../services/schema';
 import { Router } from 'express';
+import { transaction } from '../config/prismaDB';
 
-const router = Router();
+const router = Router({
+  auth: true,
+});
 
 router.get('/', async (req, res) => {
-  try {
-    const result = await schemaService.findAll({
-      include: [
-        {
-          model: models.Document,
-          as: 'document',
-        },
-      ],
+
+  transaction(async (prisma) => {
+    const result = await prisma.document.findMany({
+      include: {
+        schema: true,
+        project: true,
+        folder: true,
+        schedule: true,
+      }
     });
     res.response.success(result);
-  } catch (error) {
-    console.error(error);
-    res.response.error(500, '查询文档失败');
-  }
+  }, res);
 })
 
 

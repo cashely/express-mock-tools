@@ -1,40 +1,56 @@
 import Router from "../utils/route";
-import service from "../services/schedule";
-import transaction from "../utils/transaction";
+import { transaction } from "../config/prismaDB";
 
 const router = new Router({
     auth: true
 });
 
 router.get("/", async (req, res) => {
-  const { page = 1, pageSize = 10 } = req.query;
-  const result = await service.list({ page, pageSize });
-  res.response.success(result);
+  transaction(async (prisma) => {
+    const result = await prisma.schedule.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+    res.response.success(result);
+  }, res);
 })
 .get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const result = await service.findOneById(id);
-  res.response.success(result);
+  transaction(async (prisma) => {
+    const result = await prisma.schedule.findUnique({
+      where: {
+        id
+      },
+      include: {
+        creator: true
+      }
+    });
+    res.response.success(result);
+  }, res, '查询定时任务失败');
 })
 .post('/', async (req, res) => {
-    transaction.start(async (t) => {
-        const { times, path, gap, method } = req.body;
-        const result = await service.models.Schedule.create({
-            times,
-            path,
-            gap,
-            method,
-            creatorId: req.user.id
-        }, { transaction: t });
+    const { times, path, gap, method } = req.body;
+    transaction(async (prisma) => {
+        const result = await prisma.schedule.create({
+            data: {
+                times,
+                path,
+                gap,
+                method,
+                creatorId: req.user.id
+            }
+        });
         res.response.success(result);
-    }, res);
+    }, res, '创建定时任务失败');
 })
 .delete('/:id', async (req, res) => {
-    transaction.start(async (t) => {
-        const { id } = req.params;
-        const result = await service.deleteOneById(id, { transaction: t });
+    transaction(async (prisma) => {
+        const result = await prisma.schedule.delete({
+            where: {
+                id
+            }
+        });
         res.response.success(result);
-    }, res);
+    })
 })
 
 export default router;

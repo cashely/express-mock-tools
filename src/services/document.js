@@ -1,13 +1,16 @@
-import Service from './';
-const service = new Service();
+import { transaction } from "../config/prismaDB";
+const service = {};
 
-service.updateOneById = function updateOneById(id, document, options = {}) {
-  return service.models.Document.update(document, {
-    where: {
-      id: id
-    },
-    transaction: options.transaction
-  });
+service.updateOneById = function updateOneById(conditions, res) {
+  return transaction(async (prisma) => {
+    await prisma.document.update({
+      data: conditions
+    }, {
+      where: {
+        id: conditions.id
+      }
+    });
+  }, res);
 }
 
 

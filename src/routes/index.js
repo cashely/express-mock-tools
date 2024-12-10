@@ -1,4 +1,3 @@
-import reference from './reference';
 import project from './project';
 import document from './document';
 import folder from './folder';
@@ -11,7 +10,6 @@ import schedule from './schedule';
 export default (app) => {
   app.use('/mock', mock);
   app.use('/project', project);
-  app.use('/reference', reference);
   app.use('/document', document);
   app.use('/schema', schema);
   app.use('/folder', folder);
