@@ -10,8 +10,8 @@ const prisma = new PrismaClient();
 export async function transaction(callback, res, errorMessage = '操作失败') {
     try {
         await prisma.$transaction(callback, {
-            timeout: 10000,
-            maxWait: 10000,
+            timeout: 100000,
+            maxWait: 100000,
             retryOnTimeout: true,
         });
         console.log('事务提交成功');

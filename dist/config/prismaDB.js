@@ -31,8 +31,8 @@ function _transaction() {
           _context.prev = 1;
           _context.next = 4;
           return prisma.$transaction(callback, {
-            timeout: 10000,
-            maxWait: 10000,
+            timeout: 100000,
+            maxWait: 100000,
             retryOnTimeout: true
           });
         case 4:
