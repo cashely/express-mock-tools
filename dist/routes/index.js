@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-var _reference = _interopRequireDefault(require("./reference"));
 var _project = _interopRequireDefault(require("./project"));
 var _document = _interopRequireDefault(require("./document"));
 var _folder = _interopRequireDefault(require("./folder"));
@@ -21,7 +20,6 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default":
 var _default = exports["default"] = function _default(app) {
   app.use('/mock', _mock["default"]);
   app.use('/project', _project["default"]);
-  app.use('/reference', _reference["default"]);
   app.use('/document', _document["default"]);
   app.use('/schema', _schema["default"]);
   app.use('/folder', _folder["default"]);

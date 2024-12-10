@@ -7,11 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _fastDiff = _interopRequireDefault(require("fast-diff"));
 var _route = _interopRequireDefault(require("../utils/route"));
-var _document = _interopRequireDefault(require("../services/document"));
-var _documentLog = _interopRequireDefault(require("../services/documentLog"));
-var _schema = _interopRequireDefault(require("../services/schema"));
-var _request = _interopRequireDefault(require("../services/request"));
-var _transaction = _interopRequireDefault(require("../utils/transaction"));
+var _prismaDB = require("../config/prismaDB");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -26,396 +22,505 @@ var router = new _route["default"]({
   auth: true
 });
 router.get('/', /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
-    var projectId, result;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
+  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
+    var projectId;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
         case 0:
           projectId = req.query.projectId;
-          _context.prev = 1;
-          _context.next = 4;
-          return _document["default"].findAll({
-            where: {
-              projectId: projectId
-            }
-          });
-        case 4:
-          result = _context.sent;
-          res.response.success(result);
-          _context.next = 12;
-          break;
-        case 8:
-          _context.prev = 8;
-          _context.t0 = _context["catch"](1);
-          console.error(_context.t0);
-          res.response.error(500, '查询文档失败');
-        case 12:
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(prisma) {
+              var result;
+              return _regeneratorRuntime().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    _context.next = 2;
+                    return prisma.document.findMany({
+                      where: {
+                        projectId: Number(projectId)
+                      }
+                    });
+                  case 2:
+                    result = _context.sent;
+                    res.response.success(result);
+                  case 4:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee);
+            }));
+            return function (_x3) {
+              return _ref2.apply(this, arguments);
+            };
+          }(), res);
+        case 2:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee2);
   }));
   return function (_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }()).get('/count', /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var projectId, result;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
+  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+    var projectId;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
           projectId = req.query.projectId;
-          _context2.prev = 1;
-          _context2.next = 4;
-          return _document["default"].models.Document.count({
-            where: {
-              projectId: projectId
-            }
-          });
-        case 4:
-          result = _context2.sent;
-          res.response.success(result);
-          _context2.next = 12;
-          break;
-        case 8:
-          _context2.prev = 8;
-          _context2.t0 = _context2["catch"](1);
-          console.error(_context2.t0);
-          res.response.error(500, '统计文档数量失败');
-        case 12:
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(prisma) {
+              var result;
+              return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+                while (1) switch (_context3.prev = _context3.next) {
+                  case 0:
+                    _context3.next = 2;
+                    return prisma.document.count({
+                      where: {
+                        projectId: Number(projectId)
+                      }
+                    });
+                  case 2:
+                    result = _context3.sent;
+                    res.response.success(result);
+                  case 4:
+                  case "end":
+                    return _context3.stop();
+                }
+              }, _callee3);
+            }));
+            return function (_x6) {
+              return _ref4.apply(this, arguments);
+            };
+          }(), res, '统计文档数量失败');
+        case 2:
         case "end":
-          return _context2.stop();
+          return _context4.stop();
       }
-    }, _callee2, null, [[1, 8]]);
+    }, _callee4);
   }));
-  return function (_x3, _x4) {
-    return _ref2.apply(this, arguments);
-  };
-}()).get('/:id', /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-    var id, result;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
-        case 0:
-          id = req.params.id;
-          _context3.prev = 1;
-          _context3.next = 4;
-          return _document["default"].findOne({
-            where: {
-              id: id
-            }
-          });
-        case 4:
-          result = _context3.sent;
-          res.response.success(result);
-          _context3.next = 12;
-          break;
-        case 8:
-          _context3.prev = 8;
-          _context3.t0 = _context3["catch"](1);
-          console.error(_context3.t0);
-          res.response.error(500, '查询文档失败');
-        case 12:
-        case "end":
-          return _context3.stop();
-      }
-    }, _callee3, null, [[1, 8]]);
-  }));
-  return function (_x5, _x6) {
+  return function (_x4, _x5) {
     return _ref3.apply(this, arguments);
   };
-}()).post('/', /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
-    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
+}()).get('/:id', /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    var id;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          _transaction["default"].start(/*#__PURE__*/function () {
-            var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(t) {
-              var _req$body, projectId, name, content, path, folderId, description, type, useTemplate, protocal, scheduleId, user, schemaResult, result;
-              return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-                while (1) switch (_context4.prev = _context4.next) {
+          id = req.params.id;
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(prisma) {
+              var result;
+              return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                while (1) switch (_context5.prev = _context5.next) {
                   case 0:
-                    _req$body = req.body, projectId = _req$body.projectId, name = _req$body.name, content = _req$body.content, path = _req$body.path, folderId = _req$body.folderId, description = _req$body.description, type = _req$body.type, useTemplate = _req$body.useTemplate, protocal = _req$body.protocal, scheduleId = _req$body.scheduleId;
-                    user = req.user;
-                    _context4.next = 4;
-                    return _schema["default"].create({
-                      name: name,
-                      content: content
-                    }, {
-                      transaction: t
+                    _context5.next = 2;
+                    return prisma.document.findUnique({
+                      where: {
+                        id: Number(id)
+                      },
+                      include: {
+                        schema: true,
+                        project: true,
+                        folder: true,
+                        schedule: true
+                      }
                     });
-                  case 4:
-                    schemaResult = _context4.sent;
-                    _context4.next = 7;
-                    return _document["default"].create({
-                      projectId: projectId,
-                      folderId: folderId,
-                      name: name,
-                      schemaId: schemaResult.id,
-                      creatorId: user.id,
-                      path: path,
-                      description: description,
-                      type: type,
-                      useTemplate: useTemplate,
-                      scheduleId: scheduleId,
-                      protocal: protocal
-                    }, {
-                      transaction: t
-                    });
-                  case 7:
-                    result = _context4.sent;
-                    _context4.next = 10;
-                    return _documentLog["default"].create({
-                      documentId: result.id,
-                      operatorId: user.id,
-                      content: content,
-                      type: 1,
-                      time: Date.now()
-                    }, {
-                      transaction: t
-                    });
-                  case 10:
+                  case 2:
+                    result = _context5.sent;
                     res.response.success(result);
-                  case 11:
+                  case 4:
                   case "end":
-                    return _context4.stop();
+                    return _context5.stop();
                 }
-              }, _callee4);
+              }, _callee5);
             }));
             return function (_x9) {
-              return _ref5.apply(this, arguments);
+              return _ref6.apply(this, arguments);
             };
-          }(), res);
-        case 1:
+          }(), res, '查询文档失败');
+        case 2:
         case "end":
-          return _context5.stop();
+          return _context6.stop();
       }
-    }, _callee5);
+    }, _callee6);
   }));
   return function (_x7, _x8) {
-    return _ref4.apply(this, arguments);
+    return _ref5.apply(this, arguments);
+  };
+}()).post('/', /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+    var _req$body, projectId, name, content, path, folderId, description, type, useTemplate, protocol, scheduleId, user;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          _req$body = req.body, projectId = _req$body.projectId, name = _req$body.name, content = _req$body.content, path = _req$body.path, folderId = _req$body.folderId, description = _req$body.description, type = _req$body.type, useTemplate = _req$body.useTemplate, protocol = _req$body.protocol, scheduleId = _req$body.scheduleId;
+          user = req.user;
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(prisma) {
+              var documentLogInstance, documentLogResult;
+              return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+                while (1) switch (_context7.prev = _context7.next) {
+                  case 0:
+                    documentLogInstance = {
+                      operator: {
+                        connect: {
+                          id: user.id
+                        }
+                      },
+                      content: content,
+                      type: 1,
+                      document: {
+                        create: {
+                          name: name,
+                          path: path,
+                          project: {
+                            connect: {
+                              id: Number(projectId)
+                            }
+                          },
+                          creator: {
+                            connect: {
+                              id: user.id
+                            }
+                          },
+                          latestCreator: {
+                            connect: {
+                              id: user.id
+                            }
+                          },
+                          schema: {
+                            create: {
+                              name: name,
+                              content: content
+                            }
+                          },
+                          description: description,
+                          type: type,
+                          useTemplate: useTemplate,
+                          protocol: protocol
+                        }
+                      }
+                    };
+                    if (!!scheduleId) {
+                      documentLogInstance.schedule = {
+                        connect: {
+                          id: scheduleId
+                        }
+                      };
+                    }
+                    if (!!folderId) {
+                      documentLogInstance.document.create.folder = {
+                        connect: {
+                          id: folderId
+                        }
+                      };
+                    }
+                    _context7.next = 5;
+                    return prisma.documentLog.create({
+                      data: documentLogInstance
+                    });
+                  case 5:
+                    documentLogResult = _context7.sent;
+                    res.response.success(documentLogResult);
+                  case 7:
+                  case "end":
+                    return _context7.stop();
+                }
+              }, _callee7);
+            }));
+            return function (_x12) {
+              return _ref8.apply(this, arguments);
+            };
+          }(), res, '创建文档失败');
+        case 3:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8);
+  }));
+  return function (_x10, _x11) {
+    return _ref7.apply(this, arguments);
   };
 }()).put('/:id', /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-    var id, user, _req$body2, content, name, description, type, schemaId, path, useTemplate, protocal, scheduleId;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
+  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
+    var id, user, _req$body2, content, name, description, type, schemaId, path, useTemplate, protocol, scheduleId;
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
         case 0:
           id = req.params.id;
           user = req.user;
-          _req$body2 = req.body, content = _req$body2.content, name = _req$body2.name, description = _req$body2.description, type = _req$body2.type, schemaId = _req$body2.schemaId, path = _req$body2.path, useTemplate = _req$body2.useTemplate, protocal = _req$body2.protocal, scheduleId = _req$body2.scheduleId;
-          _transaction["default"].start(/*#__PURE__*/function () {
-            var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(t) {
-              var documentResult, isDiffContent, result;
-              return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-                while (1) switch (_context6.prev = _context6.next) {
+          _req$body2 = req.body, content = _req$body2.content, name = _req$body2.name, description = _req$body2.description, type = _req$body2.type, schemaId = _req$body2.schemaId, path = _req$body2.path, useTemplate = _req$body2.useTemplate, protocol = _req$body2.protocol, scheduleId = _req$body2.scheduleId;
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(prisma) {
+              var documentResult, isDiffContent, documentInstance, result;
+              return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+                while (1) switch (_context9.prev = _context9.next) {
                   case 0:
-                    _context6.next = 2;
-                    return _document["default"].findOne({
+                    _context9.next = 2;
+                    return prisma.document.findUnique({
+                      where: {
+                        id: Number(id)
+                      },
+                      include: {
+                        schema: true
+                      }
+                    });
+                  case 2:
+                    documentResult = _context9.sent;
+                    if (!(documentResult.creatorId !== user.id)) {
+                      _context9.next = 5;
+                      break;
+                    }
+                    return _context9.abrupt("return", res.response.error(403, '该文档不是您创建的，无法修改'));
+                  case 5:
+                    isDiffContent = (0, _fastDiff["default"])(content, documentResult.schema.content);
+                    if (!(isDiffContent.length > 1)) {
+                      _context9.next = 11;
+                      break;
+                    }
+                    _context9.next = 9;
+                    return prisma.schema.update({
+                      where: {
+                        id: schemaId
+                      },
+                      data: {
+                        content: content
+                      }
+                    });
+                  case 9:
+                    _context9.next = 11;
+                    return prisma.documentLog.create({
+                      data: {
+                        document: {
+                          connect: {
+                            id: Number(id)
+                          }
+                        },
+                        operator: {
+                          connect: {
+                            id: user.id
+                          }
+                        },
+                        content: content,
+                        type: 0
+                      }
+                    });
+                  case 11:
+                    documentInstance = {
+                      name: name,
+                      description: description,
+                      type: type,
+                      path: path,
+                      useTemplate: useTemplate,
+                      protocol: protocol
+                    };
+                    if (!!scheduleId) {
+                      documentInstance.schedule = {
+                        connect: {
+                          id: scheduleId
+                        }
+                      };
+                    }
+                    _context9.next = 15;
+                    return prisma.document.update({
+                      where: {
+                        id: Number(id)
+                      },
+                      data: documentInstance
+                    });
+                  case 15:
+                    result = _context9.sent;
+                    res.response.success(result);
+                  case 17:
+                  case "end":
+                    return _context9.stop();
+                }
+              }, _callee9);
+            }));
+            return function (_x15) {
+              return _ref10.apply(this, arguments);
+            };
+          }(), res, "更新文档失败");
+        case 4:
+        case "end":
+          return _context10.stop();
+      }
+    }, _callee10);
+  }));
+  return function (_x13, _x14) {
+    return _ref9.apply(this, arguments);
+  };
+}())["delete"]('/:id', /*#__PURE__*/function () {
+  var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
+    var id, user;
+    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
+          id = req.params.id;
+          user = req.user;
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(prisma) {
+              var documentResult, result;
+              return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+                while (1) switch (_context11.prev = _context11.next) {
+                  case 0:
+                    _context11.next = 2;
+                    return prisma.document.findUnique({
                       where: {
                         id: id
                       }
                     });
                   case 2:
-                    documentResult = _context6.sent;
+                    documentResult = _context11.sent;
                     if (!(documentResult.creatorId !== user.id)) {
-                      _context6.next = 5;
+                      _context11.next = 5;
                       break;
                     }
-                    return _context6.abrupt("return", res.response.error(403, '该文档不是您创建的，无法修改'));
+                    return _context11.abrupt("return", res.response.error(403, '该文档不是您创建的，无法删除'));
                   case 5:
-                    isDiffContent = (0, _fastDiff["default"])(content, documentResult.schema.content);
-                    if (!(isDiffContent.length > 1)) {
-                      _context6.next = 11;
-                      break;
-                    }
-                    _context6.next = 9;
-                    return _schema["default"].updateOneById(schemaId, {
-                      content: content
-                    }, {
-                      transaction: t
+                    _context11.next = 7;
+                    return prisma.document.update({
+                      where: {
+                        id: id
+                      },
+                      data: {
+                        statu: 0
+                      }
                     });
-                  case 9:
-                    _context6.next = 11;
-                    return _documentLog["default"].create({
+                  case 7:
+                    result = _context11.sent;
+                    _context11.next = 10;
+                    return prisma.documentLog.create({
                       documentId: id,
                       operatorId: user.id,
-                      content: content,
-                      type: 0,
-                      time: Date.now()
-                    }, {
-                      transaction: t
+                      type: 2
                     });
-                  case 11:
-                    _context6.next = 13;
-                    return _document["default"].updateOneById(id, {
-                      name: name,
-                      description: description,
-                      type: type,
-                      path: path,
-                      useTemplate: useTemplate,
-                      protocal: protocal,
-                      scheduleId: scheduleId
-                    }, {
-                      transaction: t
-                    });
-                  case 13:
-                    result = _context6.sent;
+                  case 10:
                     res.response.success(result);
-                  case 15:
+                  case 11:
                   case "end":
-                    return _context6.stop();
+                    return _context11.stop();
                 }
-              }, _callee6);
+              }, _callee11);
             }));
-            return function (_x12) {
-              return _ref7.apply(this, arguments);
+            return function (_x18) {
+              return _ref12.apply(this, arguments);
             };
-          }(), res);
-        case 4:
+          }());
+        case 3:
         case "end":
-          return _context7.stop();
+          return _context12.stop();
       }
-    }, _callee7);
+    }, _callee12);
   }));
-  return function (_x10, _x11) {
-    return _ref6.apply(this, arguments);
-  };
-}())["delete"]('/:id', /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-    var id, user, documentResult, result;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
-        case 0:
-          id = req.params.id;
-          user = req.user;
-          _context8.prev = 2;
-          _context8.next = 5;
-          return _document["default"].findOne({
-            where: {
-              id: id
-            }
-          });
-        case 5:
-          documentResult = _context8.sent;
-          if (!(documentResult.creatorId !== user.id)) {
-            _context8.next = 8;
-            break;
-          }
-          return _context8.abrupt("return", res.response.error(403, '该文档不是您创建的，无法删除'));
-        case 8:
-          _context8.next = 10;
-          return _document["default"].deleteOneById(id);
-        case 10:
-          result = _context8.sent;
-          _context8.next = 13;
-          return _documentLog["default"].create({
-            documentId: id,
-            operatorId: user.id,
-            type: 2,
-            time: Date.now()
-          });
-        case 13:
-          res.response.success(result);
-          _context8.next = 20;
-          break;
-        case 16:
-          _context8.prev = 16;
-          _context8.t0 = _context8["catch"](2);
-          console.error(_context8.t0);
-          res.response.error(500, '删除文档失败');
-        case 20:
-        case "end":
-          return _context8.stop();
-      }
-    }, _callee8, null, [[2, 16]]);
-  }));
-  return function (_x13, _x14) {
-    return _ref8.apply(this, arguments);
+  return function (_x16, _x17) {
+    return _ref11.apply(this, arguments);
   };
 }()).get('/export/:id', /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
-    var id, result;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-      while (1) switch (_context9.prev = _context9.next) {
+  var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
+    var id;
+    return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+      while (1) switch (_context14.prev = _context14.next) {
         case 0:
           id = req.params.id;
-          _context9.prev = 1;
-          _context9.next = 4;
-          return _document["default"].findOne({
-            where: {
-              id: id
-            }
-          });
-        case 4:
-          result = _context9.sent;
-          res.response.success({
-            content: result.toJSON().schema.content
-          });
-          _context9.next = 12;
-          break;
-        case 8:
-          _context9.prev = 8;
-          _context9.t0 = _context9["catch"](1);
-          console.error(_context9.t0);
-          res.response.error(500, '查询文档失败');
-        case 12:
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(prisma) {
+              var result;
+              return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+                while (1) switch (_context13.prev = _context13.next) {
+                  case 0:
+                    _context13.next = 2;
+                    return prisma.document.findUnique({
+                      where: {
+                        id: id
+                      },
+                      include: {
+                        schema: true
+                      }
+                    });
+                  case 2:
+                    result = _context13.sent;
+                    res.response.success({
+                      content: result.toJSON().schema.content
+                    });
+                  case 4:
+                  case "end":
+                    return _context13.stop();
+                }
+              }, _callee13);
+            }));
+            return function (_x21) {
+              return _ref14.apply(this, arguments);
+            };
+          }());
+        case 2:
         case "end":
-          return _context9.stop();
+          return _context14.stop();
       }
-    }, _callee9, null, [[1, 8]]);
+    }, _callee14);
   }));
-  return function (_x15, _x16) {
-    return _ref9.apply(this, arguments);
+  return function (_x19, _x20) {
+    return _ref13.apply(this, arguments);
   };
 }())
 
 // @name 获取文档mock的访问记录
 .get('/request/:id', /*#__PURE__*/function () {
-  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
-    var id, result;
-    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-      while (1) switch (_context10.prev = _context10.next) {
+  var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
+    var id;
+    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+      while (1) switch (_context16.prev = _context16.next) {
         case 0:
           id = req.params.id;
-          _context10.prev = 1;
-          _context10.next = 4;
-          return _request["default"].findAll({
-            where: {
-              documentId: id
-            }
-          });
-        case 4:
-          result = _context10.sent;
-          res.response.success(result);
-          _context10.next = 12;
-          break;
-        case 8:
-          _context10.prev = 8;
-          _context10.t0 = _context10["catch"](1);
-          console.log(_context10.t0);
-          res.response.error(500, _context10.t0);
-        case 12:
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(prisma) {
+              var result;
+              return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+                while (1) switch (_context15.prev = _context15.next) {
+                  case 0:
+                    _context15.next = 2;
+                    return prisma.request.findMany({
+                      where: {
+                        documentId: Number(id)
+                      }
+                    });
+                  case 2:
+                    result = _context15.sent;
+                    res.response.success(result);
+                  case 4:
+                  case "end":
+                    return _context15.stop();
+                }
+              }, _callee15);
+            }));
+            return function (_x24) {
+              return _ref16.apply(this, arguments);
+            };
+          }(), res);
+        case 2:
         case "end":
-          return _context10.stop();
+          return _context16.stop();
       }
-    }, _callee10, null, [[1, 8]]);
+    }, _callee16);
   }));
-  return function (_x17, _x18) {
-    return _ref10.apply(this, arguments);
+  return function (_x22, _x23) {
+    return _ref15.apply(this, arguments);
   };
 }())
 // 从swagger批量导入
 .post('/import/swagger', /*#__PURE__*/function () {
-  var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
-    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
-      while (1) switch (_context12.prev = _context12.next) {
+  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
+    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
-          _transaction["default"].start(/*#__PURE__*/function () {
-            var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(t) {
+          (0, _prismaDB.transaction)(/*#__PURE__*/function () {
+            var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(prisma) {
               var user, _req$body3, projectId, documents, filterNullContent, nullContent, schemaEntitys, schemaResults, documentEntitys, documentResults;
-              return _regeneratorRuntime().wrap(function _callee11$(_context11) {
-                while (1) switch (_context11.prev = _context11.next) {
+              return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+                while (1) switch (_context17.prev = _context17.next) {
                   case 0:
                     user = req.user;
                     _req$body3 = req.body, projectId = _req$body3.projectId, documents = _req$body3.documents;
@@ -431,12 +536,12 @@ router.get('/', /*#__PURE__*/function () {
                         content: item.content
                       };
                     });
-                    _context11.next = 7;
-                    return _schema["default"].bulkCreate(schemaEntitys, {
-                      transaction: t
+                    _context17.next = 7;
+                    return prisma.schema.createMany({
+                      data: schemaEntitys
                     });
                   case 7:
-                    schemaResults = _context11.sent;
+                    schemaResults = _context17.sent;
                     // 把空的内容跟非空的内容聚合成新的文档实体
                     documentEntitys = [].concat(_toConsumableArray(nullContent.map(function (item) {
                       return {
@@ -473,31 +578,31 @@ router.get('/', /*#__PURE__*/function () {
                         schemaId: item.id
                       };
                     }))); // 批量创建文档
-                    _context11.next = 11;
-                    return _document["default"].bulkCreate(documentEntitys, {
-                      transaction: t
+                    _context17.next = 11;
+                    return prisma.document.createMany({
+                      data: documentEntitys
                     });
                   case 11:
-                    documentResults = _context11.sent;
+                    documentResults = _context17.sent;
                     res.response.success(documentResults);
                   case 13:
                   case "end":
-                    return _context11.stop();
+                    return _context17.stop();
                 }
-              }, _callee11);
+              }, _callee17);
             }));
-            return function (_x21) {
-              return _ref12.apply(this, arguments);
+            return function (_x27) {
+              return _ref18.apply(this, arguments);
             };
           }(), res);
         case 1:
         case "end":
-          return _context12.stop();
+          return _context18.stop();
       }
-    }, _callee12);
+    }, _callee18);
   }));
-  return function (_x19, _x20) {
-    return _ref11.apply(this, arguments);
+  return function (_x25, _x26) {
+    return _ref17.apply(this, arguments);
   };
 }());
 var _default = exports["default"] = router;

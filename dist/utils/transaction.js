@@ -9,65 +9,33 @@ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyri
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 /**
- * @name sequlize事务
+ * @name prisma事务
  */
 
-function Transaction() {
-  this.sequelize = null;
-  this.t = null;
+function transaction(prisma) {
+  return function (callback, res) {
+    prisma.$transaction(/*#__PURE__*/function () {
+      var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee($prisma) {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return callback($prisma);
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }()).then(function () {
+      console.log('事务提交成功');
+    })["catch"](function (error) {
+      console.log(error, '事务提交失败');
+      res.response.error(500, '操作失败');
+    });
+  };
 }
-Transaction.prototype.init = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(db) {
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
-        case 0:
-          this.sequelize = db;
-        case 1:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, this);
-  }));
-  return function (_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-Transaction.prototype.start = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(callback, res) {
-    var t;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return this.sequelize.transaction();
-        case 2:
-          t = _context2.sent;
-          _context2.prev = 3;
-          _context2.next = 6;
-          return callback(t);
-        case 6:
-          _context2.next = 8;
-          return t.commit();
-        case 8:
-          _context2.next = 16;
-          break;
-        case 10:
-          _context2.prev = 10;
-          _context2.t0 = _context2["catch"](3);
-          _context2.next = 14;
-          return t.rollback();
-        case 14:
-          console.log(_context2.t0, '事务提交失败');
-          res.response.error(500, '操作失败');
-        case 16:
-        case "end":
-          return _context2.stop();
-      }
-    }, _callee2, this, [[3, 10]]);
-  }));
-  return function (_x2, _x3) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-var transaction = new Transaction();
 var _default = exports["default"] = transaction;
