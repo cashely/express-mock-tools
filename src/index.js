@@ -6,10 +6,9 @@ dotenv.config({
         '.env',
         `.env.${process.env.NODE_ENV}`,
     ]
-//   path: '.env.local'
 });
 
-console.log(process.env, '--')
+console.log(process.env.POSTGRESQL_URL, '----POSTGRESQL_URL')
 
 import start from './main.js';
 

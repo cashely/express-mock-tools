@@ -10,8 +10,7 @@ function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default":
 console.log(process.env.NODE_ENV, '----process.env');
 _dotenv["default"].config({
   path: ['.env', ".env.".concat(process.env.NODE_ENV)]
-  //   path: '.env.local'
 });
-console.log(process.env, '--');
+console.log(process.env.POSTGRESQL_URL, '----POSTGRESQL_URL');
 var app = (0, _main["default"])();
 var _default = exports["default"] = app;
