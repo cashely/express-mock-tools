@@ -7,7 +7,7 @@ exports["default"] = void 0;
 var _dotenv = _interopRequireDefault(require("dotenv"));
 var _main = _interopRequireDefault(require("./main.js"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
-console.log(process.env, '----process.env');
+console.log(process.env.NODE_ENV, '----process.env');
 _dotenv["default"].config({
   path: ['.env', ".env.".concat(process.env.NODE_ENV)]
   //   path: '.env.local'
