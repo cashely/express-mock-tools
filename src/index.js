@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+
+console.log(process.env, '----process.env')
 dotenv.config({
     path: [
         '.env',
