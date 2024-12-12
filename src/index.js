@@ -8,7 +8,9 @@ dotenv.config({
     ]
 });
 
-console.log(process.env.POSTGRESQL_URL, '----POSTGRESQL_URL')
+setTimeout(() => {
+    console.log(process.env.POSTGRESQL_URL, '----process.env.POSTGRESQL_URL')
+}, 2000);
 
 import start from './main.js';
 

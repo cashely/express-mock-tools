@@ -11,6 +11,8 @@ console.log(process.env.NODE_ENV, '----process.env');
 _dotenv["default"].config({
   path: ['.env', ".env.".concat(process.env.NODE_ENV)]
 });
-console.log(process.env.POSTGRESQL_URL, '----POSTGRESQL_URL');
+setTimeout(function () {
+  console.log(process.env.POSTGRESQL_URL, '----process.env.POSTGRESQL_URL');
+}, 2000);
 var app = (0, _main["default"])();
 var _default = exports["default"] = app;
