@@ -9,7 +9,7 @@ dotenv.config({
 //   path: '.env.local'
 });
 
-console.log(process.env.A, '--')
+console.log(process.env, '--')
 
 import start from './main.js';
 
